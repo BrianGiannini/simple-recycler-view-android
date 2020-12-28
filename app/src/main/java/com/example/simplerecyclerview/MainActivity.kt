@@ -3,13 +3,15 @@ package com.example.simplerecyclerview
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.random.Random
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ExampleAdapter.OnItemClickListener {
     private val exampleList = generateDummyList(500)
-    private val adapter = ExampleAdapter(exampleList)
+    private val adapter = ExampleAdapter(exampleList, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,13 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyItemRemoved(index)
     }
 
+    override fun onItemClick(position: Int) {
+        Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
+        val clickedItem = exampleList[position]
+        clickedItem.text1 = "Clicked"
+        adapter.notifyItemChanged(position)
+    }
+
     private fun generateDummyList(size: Int): ArrayList<ExampleItem> {
         val list = ArrayList<ExampleItem>()
         for (i in 0 until size) {
@@ -52,4 +61,5 @@ class MainActivity : AppCompatActivity() {
         }
         return list
     }
+
 }
